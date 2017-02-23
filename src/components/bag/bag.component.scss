@@ -1,0 +1,26 @@
+.bag{
+    position: absolute;
+    /*bottom: 4px;*/
+    right: 0px;
+    height: inherit;
+    width: 100px;
+    display: block;
+    background-color: rgba(0,0,0,0.7);
+    border-radius: 0 3px 3px 0;
+    /*padding-right: 10px;*/
+    color: #fff;
+    text-align: left;
+    z-index: 5;
+    /*display: none;*/
+    /* Fix Safari fullscreen bug */
+    /*-webkit-transform: translateZ(9999px);*/
+    /*transform: translateZ(9999px);*/
+}
+.inUseByMe{
+    /*opacity: 0.5;*/
+    background-color: gold;
+}
+.inUseByOther{
+    opacity: 0.5;
+    /*background-color: gold;*/
+}

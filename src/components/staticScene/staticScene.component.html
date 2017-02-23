@@ -1,0 +1,6 @@
+<div class="staticScene" v-if="showModal">
+    <div style="overflow:hidden;position:relative;">
+        <img class="staticImage" :src="modalSrc" alt="a modal">
+        <img v-for="hotSpot in modalHotSpots" class="imageHotSpot" :style="makeStyle(hotSpot)" :src="hotSpot.imgSrc" :id="hotSpot.id" @click="clickHotSpot(hotSpot.id)" v-show="hotSpot.shown">
+    </div>
+</div>
