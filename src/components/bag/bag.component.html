@@ -1,6 +1,7 @@
 <div class="bag">
-  <!-- <div v-for="bag in escapeTogetherService.bags()">
-    <img @click="escapeTogetherService.bagClicked(artifact.id)" v-for="artifact in bag" :src="{{artifact.src}}" height="64" width="64" [class.inUseByMe]="artifact.beingUsedBy===escapeTogetherService.userId()" [class.inUseByOther]="escapeTogetherService.usedByOthers(artifact, escapeTogetherService.userId())"/>
+  <div v-for="bag in bags">
+    <!-- <img @click="escapeTogetherService.bagClicked(artifact.id)" v-for="artifact in bag" :src="{{artifact.src}}" height="64" width="64" [class.inUseByMe]="artifact.beingUsedBy===escapeTogetherService.userId()" [class.inUseByOther]="escapeTogetherService.usedByOthers(artifact, escapeTogetherService.userId())"/> -->
+    <img v-for="artifact in bag" @click="bagClicked(artifact.id)" :src="artifact.src" height="64" width="64" :class="{inUseByMe:artifact.beingUsedBy===userId, inUseByOther:((artifact.beingUsedBy !== -1) && (artifact.beingUsedBy !== userId))}"/>
     <hr>
-  </div> -->
+  </div>
 </div>

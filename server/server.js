@@ -1,7 +1,7 @@
 "use strict";
 const gameData = 'server/data.json';
 const express = require('express');
-const port = 3003;
+const port = 3050;
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const GameState = require('./gameState');
@@ -35,9 +35,13 @@ let objStr = fs.readFileSync(gameData, 'utf8');
 app.get('/gameData', function (req, res) {
 	var fileStream = fs.createReadStream(gameData);
 	fileStream.pipe(res);
-	console.log('hello my new user');
 	// res.sendFile(gameData);
 	// express.static('../public/sw.js', staticOptions)
+});
+app.get('/img/artifacts/:id', function (req, res) {
+	var fileStream = fs.createReadStream('../img/artifacts/'+req.params.id);
+	fileStream.pipe(res);
+	console.log('hello photo');
 });
 
 http.listen(port, function () {
@@ -134,7 +138,7 @@ gameIo.on('connection', function (socket) {
 
 });
 
-http.listen(3003, function () {
-console.log('WebSocket is Ready');
+http.listen(port, function () {
+	console.log('WebSocket is Ready');
 });
 

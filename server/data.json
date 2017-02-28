@@ -155,7 +155,7 @@
 				"yaw" : -181,
 				"id" : "doorBack",
 				"type" : "info",
-				"sceneId" : "classroom",
+				// "sceneId" : "classroom",
 				"imgSrc" : "img/artifacts/semi-trans.png",
 				"shown" : true,
 				"beingUsedBy" : -1,

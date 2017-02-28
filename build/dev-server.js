@@ -71,8 +71,8 @@ app.get('/pannellum/img/:id', (req, res)=>{
 app.get('/img/artifacts/:id', (req, res)=>{
  res.sendFile(__dirname + '/img/artifacts/'+req.params.id);
 });
-app.get('/img/panoramas/classroom/:folder/:id', (req, res)=>{
- res.sendFile(__dirname + '/img/panoramas/classroom/'+req.params.folder+'/'+req.params.id);
+app.get('/img/panoramas/:room/:folder/:id', (req, res)=>{
+ res.sendFile(__dirname + '/img/panoramas/'+req.params.room+'/'+req.params.folder+'/'+req.params.id);
 });
 app.get('/img/scenes/:id', (req, res)=>{
  res.sendFile(__dirname + '/img/scenes/'+req.params.id);

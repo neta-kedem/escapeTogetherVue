@@ -1,21 +1,33 @@
+import socket from '../../main.js';
+
+
 export const OPEN_MODAL = 'store/OPEN_MODAL';
 export const CLOSE_MODAL = 'store/CLOSE_MODAL';
 export const MODAL_SRC = 'store/MODAL_SRC';
 export const SET_HOT_SPOTS = 'store/SET_HOT_SPOTS';
+export const SET_BAGS = 'store/SET_BAGS';
+export const SET_USER_ID = 'store/SET_USER_ID';
+export const SET_SOCKET = 'store/SET_SOCKET';
+export const SOCKET_ON = 'store/SOCKET_ON';
+export const START_SOCKET_IO = 'store/START_SOCKET_IO';
 
 const state = {
   showModal     : false,
   modalSrc      : null,
   modalHotSpots : [],
-  socket        : null,
-  currScene    : 'hm...'
+  socket        : socket,
+  currScene     : '',
+  bags          : [],
+  userId        : -1,
 };
 
 const getters = {
     showModal   : state => state.showModal ,
     modalSrc    : state => state.modalSrc ,
     modalHotSpots:state => state.modalHotSpots ,
-    socket      : state => state.socket
+    socket      : state => socket,
+    bags        : state => state.bags,
+    userId      : state => state.userId,
 };
 
 const mutations = {
@@ -30,65 +42,30 @@ const mutations = {
         state.modalSrc  = src;
     },
     [SET_HOT_SPOTS] ( state, hotSpots ) {
-        console.log('SET_HOT_SPOTS', hotSpots);
         state.modalHotSpots = hotSpots;
-    }
-
+    },
+    [SET_BAGS] ( state, bags ) {
+        state.bags = bags;
+    },
+    [SET_USER_ID] ( state, userId ) {
+        state.userId = userId;
+    },
+    [SET_SOCKET] ( state, socket ) {
+        state.socket = socket;
+    },
+    [SOCKET_ON] ( state, socketOn ) {
+        state.socket.on(socketOn.action, socketOn.function)
+    },
 };
-
-/*
-export const GET_PRODUCTS = 'store/GET_PRODUCTS';
-export const GET_PRODUCTS_SUCCESS = 'store/GET_PRODUCTS_SUCCESS';
-export const GET_PRODUCTS_ERROR = 'store/GET_PRODUCTS_ERROR';
-export const UPDATE_QUANTITY = 'store/UPDATE_QUANTITY';
-
-import shopService from '../../services/shop.service.js';
-
-const state = {
-  loading : false,
-  products: [],
-};
-
 
 const actions = {
-  getProducts ( { commit } ) {
-    if( state.products.length ) {
-      commit(GET_PRODUCTS_SUCCESS, state.products);
-      return;
+    startSocketIo({commit}){
     }
-    commit(GET_PRODUCTS);
-    shopService.getProducts().then(products => {
-      commit(GET_PRODUCTS_SUCCESS, products);
-    }).catch(err => {
-      commit(GET_PRODUCTS_ERROR, err);
-    });
-  }
 }
 
-const mutations = {
-  [GET_PRODUCTS]( state ) {
-    state.loading = true;
-  },
-  [GET_PRODUCTS_SUCCESS] ( state, products ) {
-    state.products = products;
-    state.loading = false;
-  },
-  [GET_PRODUCTS_ERROR] ( state, products ) {
-    state.loading = false;
-  },
-  [UPDATE_QUANTITY]( _, { product, quantity } ) {
-    product.quantity = quantity;
-  }
-}
-
-const getters = {
-  products: state => state.products,
-  loading : state => state.loading
-}
-*/
 export default {
   state,
   getters,
-  // actions,
+  actions,
   mutations
 }

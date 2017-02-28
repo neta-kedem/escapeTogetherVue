@@ -6,10 +6,16 @@ import Shop from './components/shop';
 import EscapeTogether from './components/escapeTogether';
 import Admin from './components/admin/admin';
 
-const routes = [{
-  path     : '/signin',
-  name     : 'signin',
-  component: Signin
+const routes = [
+  {
+    path     : '/',
+    name     : 'escapeTogether',
+    component: EscapeTogether
+  },
+  {
+    path     : '/signin',
+    name     : 'signin',
+    component: Signin
   },
   {
     path     : '/signup',
@@ -22,20 +28,14 @@ const routes = [{
     component: Shop
   },
   {
-    path     : '/',
-    name     : 'escapeTogether',
-    component: EscapeTogether
-  },
-  {
     path     : '/admin',
     name     : 'admin',
     component: Admin
   },
-  
   { path: '*', redirect: { name: 'home' } }];
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   routes
 });
 
