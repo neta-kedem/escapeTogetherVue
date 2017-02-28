@@ -1,13 +1,12 @@
-const SERVER_URL=window.location.hostname+':3003/game';
 const JSON_URL = '/server/data.json';
 
 import Vue from 'vue';
 
-import { GameState } from '../../server/gameState';
-import * as io from 'socket.io-client';
-import {IArtifact} from "../../server/gameState";
+// import { GameState } from '../../server/gameState';
+// import * as io from 'socket.io-client';
+// import {IArtifact} from "../../server/gameState";
 
-
+/*
 export function getProducts() {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -67,7 +66,7 @@ export default {
   getProducts,
   checkout
 }
-
+*/
 export function loadPannellum(elId){
     return new Promise((resolve,reject) => {
       Vue.http.get(JSON_URL).toPromise().then((res) => {

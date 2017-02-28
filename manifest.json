@@ -1,0 +1,14 @@
+{
+  "name": "Escape Together",
+  "short_name": "Escape Together",
+  "version": 1.0,
+  "icons": [{
+    "src": "./img/icon04.png",
+    "sizes": "128x128",
+    "type": "image/png"
+  }],
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#2C3E50",
+  "theme_color": "#90ee90"
+}
