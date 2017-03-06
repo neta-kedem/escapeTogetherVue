@@ -7,7 +7,8 @@ const cors = require('cors');
 const GameState = require('./gameState');
 const fs = require('fs');
 const clientSessions = require('client-sessions');
-
+const Room = require('./Room.class');
+const RoomsManager = require('./roomManager');
 
 
 const app = express();
@@ -55,10 +56,9 @@ const gameIo = io.of('/game');
 function emitState(msg) {
 	if(msg.hasOwnProperty('message')){
 		gameIo.emit('message', msg);
-		}
-	else{
+	} else {
 		gameIo.emit('state update', msg);
-		}
+	}
 }
 
 //from babel
@@ -99,6 +99,10 @@ let clientsideJSON = eval('(' + objStr + ')');
 let initialGameState = getGameStateFromJSON(clientsideJSON);
 let inactiveUsers=[];
 var gameState = new GameState(initialGameState, emitState);
+
+gameIo.count = 0;
+gameIo.roomsGroup = new RoomsManager();
+
 gameIo.on('connection', function (socket) {
 	var wantedUserId = +socket.handshake.query.userId;
 	console.log('a user connected');
@@ -108,10 +112,20 @@ gameIo.on('connection', function (socket) {
 		inactiveUsers[wantedUserId] = false;
 		stateWithUserId = gameState.reconnectPlayer(wantedUserId);
 	}else{
+		if (!socket.roomId) {
+			// console.log('socket.handshake.query:',socket.handshake.query);
+			let userName = socket.handshake.query.userName;
+			let myGender = socket.handshake.query.myGender;
+			let prefGender = socket.handshake.query.prefGender;
+			gameIo.count++;
+			console.log('escaping together' + gameIo.count);
+			let room = gameIo.roomsGroup.setupAvailableRoom(userName, myGender, prefGender);
+			socket.roomId = room.id;
+			socket.join(room.id);
+		}
 		stateWithUserId = gameState.addPlayer('gramsci', 'queer', 'classroom');
 	}
 	const userId = stateWithUserId.userId;
-	// console.log(stateWithUserId);
 	socket.emit('state update', stateWithUserId);
 	console.log('state update');
 	socket.broadcast.emit('state update', {
@@ -135,7 +149,6 @@ gameIo.on('connection', function (socket) {
 		console.log('bagedArtifactClicked:', msg);
 		gameState.bagedArtifactClicked(userId, msg);
 	});
-
 });
 
 http.listen(port, function () {

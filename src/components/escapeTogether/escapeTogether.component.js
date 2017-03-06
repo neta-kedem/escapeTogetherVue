@@ -1,6 +1,7 @@
 import {mapGetters, mapMutations} from 'vuex';
 import authService from '../../services/auth.service';
-import {MODAL_SRC, OPEN_MODAL, CLOSE_MODAL, SET_HOT_SPOTS, SET_BAGS, SET_USER_ID, START_SOCKET_IO} from '../../modules/escapeTogether/escapeTogether.module';
+import {MODAL_SRC, OPEN_MODAL, CLOSE_MODAL, SET_HOT_SPOTS, SET_BAGS, SET_USER_ID} from '../../modules/escapeTogether/escapeTogether.module';
+import socket from '../../main.js';
 
 import Vue from 'vue';
 const JSON_URL = 'gameData';
@@ -12,7 +13,7 @@ export default {
         return {
             view:null,
             isPannellumOnLoadActive: false,
-            _currScene:''
+            _currScene:'',
         }
     },
     methods: {
@@ -51,12 +52,12 @@ export default {
             }
         },
         artifactClicked(artifactId) {
-            this.socket.emit('userClick', artifactId);
+            window.socket.emit('userClick', artifactId);
             console.log('user click:', artifactId);
         },
         start(){
             console.log('start');
-            this.socket.on('message',(msg)=>{
+            window.socket.on('message',(msg)=>{
                 console.log('msg:',msg);
                 if (msg.userId === this.userId){
                     let b = document.querySelector('.pnlm-title-box');
@@ -67,12 +68,12 @@ export default {
                     }
                 }
             });
-            // this.socket.on('sound',(msg)=>{
+            // window.socket.on('sound',(msg)=>{
             //     if (msg.userId === this.userId) {
             //         console.log('soundy sound:');
             //     }
             // });
-            this.socket.on('state update', (msg)=>{
+            window.socket.on('state update', (msg)=>{
                 console.log('msg update:',msg);
                 console.log('_currScene',this._currScene);
                 if(msg.hasOwnProperty('userId')){
@@ -126,7 +127,6 @@ export default {
         ...mapGetters([
           'showModal',
           'userId',
-          'socket',
         ]),
     },
     mounted() {

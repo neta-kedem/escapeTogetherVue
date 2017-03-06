@@ -1,10 +1,15 @@
 const JSON_URL = '/server/data.json';
 
 import Vue from 'vue';
+import io from 'socket.io-client';
 
-// import { GameState } from '../../server/gameState';
-// import * as io from 'socket.io-client';
-// import {IArtifact} from "../../server/gameState";
+// export function startSocketIo(){
+//   return new Promise((resolve,reject) => {
+//       io(window.location.hostname+':3050'+'/game',{query:{userId:localStorage.getItem('escapeTogetherUserId')}}).toPromise().then((res) => {
+//       });
+//     });
+// }
+      
 
 /*
 export function getProducts() {
@@ -67,12 +72,12 @@ export default {
   checkout
 }
 */
-export function loadPannellum(elId){
-    return new Promise((resolve,reject) => {
-      Vue.http.get(JSON_URL).toPromise().then((res) => {
-        // this.view = pannellum.viewer(elId, eval('(' + res._body + ')'));
-        // resolve();
-        // this.view.on('load', resolve);
-      });
-    });
-  }
+// export function loadPannellum(elId){
+//     return new Promise((resolve,reject) => {
+//       Vue.http.get(JSON_URL).toPromise().then((res) => {
+//         // this.view = pannellum.viewer(elId, eval('(' + res._body + ')'));
+//         // resolve();
+//         // this.view.on('load', resolve);
+//       });
+//     });
+//   }

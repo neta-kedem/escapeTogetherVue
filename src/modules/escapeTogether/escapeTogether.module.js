@@ -1,6 +1,5 @@
 import socket from '../../main.js';
 
-
 export const OPEN_MODAL = 'store/OPEN_MODAL';
 export const CLOSE_MODAL = 'store/CLOSE_MODAL';
 export const MODAL_SRC = 'store/MODAL_SRC';
@@ -9,7 +8,6 @@ export const SET_BAGS = 'store/SET_BAGS';
 export const SET_USER_ID = 'store/SET_USER_ID';
 export const SET_SOCKET = 'store/SET_SOCKET';
 export const SOCKET_ON = 'store/SOCKET_ON';
-export const START_SOCKET_IO = 'store/START_SOCKET_IO';
 
 const state = {
   showModal     : false,
@@ -59,8 +57,6 @@ const mutations = {
 };
 
 const actions = {
-    startSocketIo({commit}){
-    }
 }
 
 export default {

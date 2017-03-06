@@ -4,12 +4,12 @@
 "use strict";
 var GameState = (function () {
     function GameState(scenesData, cb, playerName, playerGender, playerCurrScene) {
-        var _this = this;
+        var that = this;
         if (playerCurrScene === void 0) { playerCurrScene = 'classroom'; }
         this.bags = []; //decide later the exact item structure
         this.players = [];
         //to put in some utility file
-        this.flatten = function (list) { return list.reduce(function (acc, curr) { return acc.concat(Array.isArray(curr) ? _this.flatten(curr) : curr); }, []); };
+        this.flatten = function (list) { return list.reduce(function (acc, curr) { return acc.concat(Array.isArray(curr) ? that.flatten(curr) : curr); }, []); };
         this.scenes = scenesData.hotSpots;
         this.modals = scenesData.modals;
         this.cb = cb;
@@ -34,7 +34,7 @@ var GameState = (function () {
     };
     GameState.prototype.userClick = function (userId, artifactId) {
         if(artifactId.devtoolsEnabled || artifactId.source) return;
-        var _this = this;
+        var that = this;
         console.log('game state totally knows' , artifactId , 'was clicked');
         var userScene = this.players[userId].currScene;
         var clickedArtifact;
@@ -57,11 +57,11 @@ var GameState = (function () {
                 clickedArtifact.actions.forEach(function (action) {
                     switch (Object.keys(action)[0]) {
                         case 'collect':
-                            _this.bags[userId].push(_this.findArtifactById(action.collect));
+                            that.bags[userId].push(that.findArtifactById(action.collect));
                             console.log('totally collecting!');
                             break;
                         case 'loadScene':
-                            _this.players[userId].currScene = action.loadScene;
+                            that.players[userId].currScene = action.loadScene;
                             break;
                         /*                        //remind me why we have both loadModal and loadScene?
                                                 case 'loadModal':
@@ -71,23 +71,23 @@ var GameState = (function () {
                         */
                         case 'changeSceneEveryone':
                             Object.keys(action.changeSceneEveryone).forEach(function (sceneToChange) {
-                                _this.players.forEach(function (player) {
+                                that.players.forEach(function (player) {
                                     if (player.currScene === sceneToChange)
                                         player.currScene = action.changeSceneEveryone[sceneToChange];
                                 });
                             });
                             break;
                         case 'showHotSpot':
-                            _this.findArtifactById(action.showHotSpot).shown = true;
+                            that.findArtifactById(action.showHotSpot).shown = true;
                             break;
                         case 'hideHotSpot':
-                            _this.findArtifactById(action.hideHotSpot).shown = false;
+                            that.findArtifactById(action.hideHotSpot).shown = false;
                             break;
                         case 'message':
-                            _this.sendMessage(userId, action.message);
+                            that.sendMessage(userId, action.message);
                             break;
                         case 'playSound':
-                            _this.soundEffect(userId, action.sound);
+                            that.soundEffect(userId, action.sound);
                             //todo: add sound effects
                             break;
                     }
@@ -109,7 +109,7 @@ var GameState = (function () {
         this.bags.push([]);
         return { bags: this.bags, players: this.players, scenes: this.scenes, modals: this.modals, userId: this.players.length - 1 };
     };
-    //a happy new player reconnected the game
+    //a happy old player reconnected the game
     GameState.prototype.reconnectPlayer = function (userId) {
         return { bags: this.bags, players: this.players, scenes: this.scenes, modals: this.modals, userId: userId };
     };
@@ -131,11 +131,11 @@ var GameState = (function () {
     };
     ;
     GameState.prototype.unSelectItemInBag = function (userId) {
-        var _this = this;
+        var that = this;
         if (this.players[userId].itemIdInHand) {
             this.bags.forEach(function (bag) {
                 bag.forEach(function (artifact) {
-                    if (artifact.id === _this.players[userId].itemIdInHand)
+                    if (artifact.id === that.players[userId].itemIdInHand)
                         artifact.beingUsedBy = -1;
                     console.log('artifact.id:', artifact.id);
                 });

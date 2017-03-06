@@ -19,7 +19,7 @@ $base-url: '';
   padding-top: 130px;
 }
 #app{
-	height:100vh;
+	height:100%;
 }
 
 .pnlm-container {
@@ -133,7 +133,7 @@ $base-url: '';
 
 .pnlm-panorama-info {
     position: absolute;
-    bottom: 4px;
+    bottom: 0;
     background-color: rgba(0,0,0,0.7);
     border-radius: 0 3px 3px 0;
     padding-right: 10px;
@@ -412,4 +412,8 @@ div.pnlm-tooltip:hover:after {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+body, html {
+  height: 100%;
 }

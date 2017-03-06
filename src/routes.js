@@ -8,12 +8,12 @@ import Admin from './components/admin/admin';
 
 const routes = [
   {
-    path     : '/',
+    path     : '/game',
     name     : 'escapeTogether',
     component: EscapeTogether
   },
   {
-    path     : '/signin',
+    path     : '/',
     name     : 'signin',
     component: Signin
   },

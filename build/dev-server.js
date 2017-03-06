@@ -80,6 +80,15 @@ app.get('/img/scenes/:id', (req, res)=>{
 app.get('/favicon.ico', (req, res)=>{
  res.sendFile(__dirname + '/img/icon04.png');
 });
+app.get('/manifest.json', (req, res)=>{
+ res.sendFile(__dirname + '/manifest.json');
+});
+
+app.get('/img/:id', (req, res)=>{
+ res.sendFile(__dirname +'/img/'+ req.params.id);
+});
+
+
 module.exports = app.listen(port, function (err) {
   if (err) {
     console.log(err)

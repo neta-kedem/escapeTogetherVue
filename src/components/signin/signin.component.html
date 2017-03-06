@@ -1,4 +1,60 @@
-<div class="container below-nav">
+<v-touch ref="plsWork" class="signInBody" id="stage"
+  v-on:panend="onSwipe($event)"
+  v-on:enabled="true"
+  >
+<div class="signInBody">
+  <span style="color: #000000; line-height: 125px" class="glyphicon glyphicon-menu-left fa-5x col-sm-3 col-xs-3" :style="{visibility:hideBack}" @click="changeQuestion(-1)"></span>
+  <div class="swipe-sign-in col-sm-6 col-xs-6">
+    <transition :duration="1000"
+      name="slide-in"
+      :enter-active-class="swipeIn"
+    >
+      <div class="yourGender" v-show="questionNum===0">
+        <h2>my gender:</h2>
+        <br>
+        <div>
+          <input type="image" class="genderIcon girlIcon" :class={girlChosen:amIWoman} src="img/girl01.png" alt="a girl" @click="chooseGender('myGender', 'woman')">
+          <input type="image" class="genderIcon boyIcon" :class={boyChosen:amIMale} src="img/boy01.png" alt="a boy" @click="chooseGender('myGender', 'man')">
+        </div>
+      </div>
+    </transition>
+    <transition :duration="1000"
+      name="slide-in"
+      :enter-active-class="swipeIn"
+    >
+      <div v-show="questionNum===1">
+        <h2>prefered gender:</h2>
+        <input type="image" class="genderIcon girlIcon" :class={girlChosen:areUWoman} src="img/girl01.png" alt="a girl" @click="chooseGender('prefGender', 'woman')">
+        <input type="image" class="genderIcon boyIcon" :class={boyChosen:areUMan} src="img/boy01.png" alt="a boy" @click="chooseGender('prefGender', 'man')">
+      </div>
+    </transition>
+    <transition :duration="1000"
+      name="slide-in"
+      :enter-active-class="swipeIn"
+    >
+      <div v-show="questionNum===2">
+        <h2>nick name:</h2>
+        <input class="textBox" type="text" v-model="nickName">
+      </div>
+    </transition>
+    <transition :duration="1000"
+      name="slide-in"
+      :enter-active-class="swipeIn"
+    >
+      <div v-if="questionNum===3">
+        <button class="lockMeBtn" @click="lockMe">LOCK ME UP</button>
+      </div>
+    </transition>
+  </div>
+  <span style="color: #000000;" :style="{visibility:visibilityEnableNextQues}" class="glyphicon glyphicon-menu-right fa-5x col-sm-3 col-xs-3" @click="changeQuestion(1)"></span>
+</div>
+  <br>
+  <div class="changeQuesBtns">
+    <button class="signInBtn backButton" @click="changeQuestion(-1)" :style="{visibility:hideBack}">BACK</button>
+    <button class="signInBtn nextButton" :disabled="enableNextQues" @click="changeQuestion(1)" :style="{visibility:hideNext}">NEXT</button>
+  </div>
+</v-touch>
+<!-- <div class="container below-nav">
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 ">
       <h1 class="text-center login-title">Sign in to continue (pass: 123456)</h1>
@@ -32,3 +88,4 @@
     </div>
   </div>
 </div>
+ -->
