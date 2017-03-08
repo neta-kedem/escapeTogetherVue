@@ -2,7 +2,7 @@
   v-on:panend="onSwipe($event)"
   v-on:enabled="true"
   >
-<div class="signInBody">
+<div class="signInBody" @keyup.enter="changeQuestion(1)">
   <span style="color: #000000; line-height: 125px" class="glyphicon glyphicon-menu-left fa-5x col-sm-3 col-xs-3" :style="{visibility:hideBack}" @click="changeQuestion(-1)"></span>
   <div class="swipe-sign-in col-sm-6 col-xs-6">
     <transition :duration="1000"
@@ -34,7 +34,7 @@
     >
       <div v-show="questionNum===2">
         <h2>nick name:</h2>
-        <input class="textBox" type="text" v-model="nickName">
+        <input class="textBox" type="text" v-model="localnickName">
       </div>
     </transition>
     <transition :duration="1000"

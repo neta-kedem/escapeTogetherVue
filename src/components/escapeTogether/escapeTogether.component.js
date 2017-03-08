@@ -7,13 +7,17 @@ import Vue from 'vue';
 const JSON_URL = 'gameData';
 import FixedPhoto from '../staticScene';
 import BagComponent from '../bag';
+import GamesComponent from '../games';
+
+import io from 'socket.io-client';
+
 
 export default {
     data:() =>{
         return {
             view:null,
             isPannellumOnLoadActive: false,
-            _currScene:'',
+            currentScene:'classroom',
         }
     },
     methods: {
@@ -42,8 +46,8 @@ export default {
                 this.isPannellumOnLoadActive = true;
                 this.view.on('load', ()=>{
                     console.log('this:',this);
-                    console.warn('load event fired to ',this._currScene);
-                    this._scenes[this._currScene].forEach((artifact)=>{
+                    console.warn('load event fired to ',this.currentScene);
+                    this._scenes[this.currentScene].forEach((artifact)=>{
                         let hsHtml=(document.querySelector('#'+artifact.id));
                         if(hsHtml) hsHtml.style.display = artifact.shown? 'block': 'none';
                         else console.warn('#' + artifact.id+ ' not found in DOM in if');
@@ -56,6 +60,11 @@ export default {
             console.log('user click:', artifactId);
         },
         start(){
+            window.socket = io(window.location.hostname+':3050'+'/game',{query:{userId:localStorage.getItem('escapeTogetherUserId'),
+                                                                                roomId:localStorage.getItem('escapeTogetherRoomId'),
+                                                                                myGender:this.myGender,
+                                                                                prefGender:this.prefGender,
+                                                                                userName:this.nickName}});
             console.log('start');
             window.socket.on('message',(msg)=>{
                 console.log('msg:',msg);
@@ -73,24 +82,25 @@ export default {
             //         console.log('soundy sound:');
             //     }
             // });
-            window.socket.on('state update', (msg)=>{
+            window.socket.on('state update', (msg)=> {
                 console.log('msg update:',msg);
-                console.log('_currScene',this._currScene);
                 if(msg.hasOwnProperty('userId')){
                     this.setUserId(msg.userId);
                     this.modals = msg.modals;
                     localStorage.setItem('escapeTogetherUserId', msg.userId);
+                    localStorage.setItem('escapeTogetherRoomId', msg.roomId);
                 }
+                console.log('currentScene',this.currentScene, 'this.userId', this.userId);
                 this.setBags(msg.bags);
 
                 const scene = msg.players[this.userId].currScene;
                 this._scenes = msg.scenes;
-                if(this._currScene !== scene){
-                    this._currScene = scene;
+                if(this.currentScene !== scene){
+                    this.currentScene = scene;
                     console.log('changingScene', msg);
                     //we have a modal scene
                     if(this.modals && this.modals.hasOwnProperty(scene)){
-                        console.log('_currScene in if',this._currScene);
+                        console.log('currentScene in if',this.currentScene);
 
                         this.modalSrc(this.modals[scene].modalSrc);
                         // this.modalSrc = this.modals[scene].modalSrc;
@@ -101,7 +111,7 @@ export default {
                     else{
                         this.closeModal();
 
-                        console.log('_currScene in else',this._currScene);
+                        console.log('currentScene in else',this.currentScene);
                         //this.view = this.view.loadScene(scene, 0, 0, 100);
                         // 'same' means scene default pitch/yaw/hfow from config.json
                         //if (!localStorage.xxx)this.view = 
@@ -127,11 +137,16 @@ export default {
         ...mapGetters([
           'showModal',
           'userId',
+          'myGender',
+          'prefGender',
+          'nickName',
         ]),
     },
     mounted() {
+        console.log('this 1',this);
         let prmLoaded = this.loadPannellum('panorama');
         prmLoaded.then(()=>{
+            
             this.start();
         });
         window.addEventListener('message' , (msg)=>{
@@ -146,7 +161,8 @@ export default {
     },
     components: {
         FixedPhoto,
-        BagComponent
+        BagComponent,
+        GamesComponent,
     }
 
 }

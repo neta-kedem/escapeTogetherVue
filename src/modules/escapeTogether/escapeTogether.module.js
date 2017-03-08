@@ -9,6 +9,10 @@ export const SET_USER_ID = 'store/SET_USER_ID';
 export const SET_SOCKET = 'store/SET_SOCKET';
 export const SOCKET_ON = 'store/SOCKET_ON';
 
+export const MY_GENDER = 'store/MY_GENDER';
+export const PREF_GENDER = 'store/PREF_GENDER';
+export const NICKNAME = 'store/NICKNAME';
+
 const state = {
   showModal     : false,
   modalSrc      : null,
@@ -17,6 +21,9 @@ const state = {
   currScene     : '',
   bags          : [],
   userId        : -1,
+  myGender      : '',
+  prefGender    : '',
+  nickName      :''
 };
 
 const getters = {
@@ -26,6 +33,9 @@ const getters = {
     socket      : state => socket,
     bags        : state => state.bags,
     userId      : state => state.userId,
+    myGender    : state => state.myGender,
+    prefGender  : state => state.prefGender,
+    nickName    : state => state.nickName,
 };
 
 const mutations = {
@@ -46,13 +56,22 @@ const mutations = {
         state.bags = bags;
     },
     [SET_USER_ID] ( state, userId ) {
-        state.userId = userId;
+        state.userId = userId % 2;
     },
     [SET_SOCKET] ( state, socket ) {
         state.socket = socket;
     },
     [SOCKET_ON] ( state, socketOn ) {
         state.socket.on(socketOn.action, socketOn.function)
+    },
+    [MY_GENDER] ( state, myGender ) {
+        state.myGender = myGender;
+    },
+    [PREF_GENDER] ( state, prefGender ) {
+        state.prefGender = prefGender;
+    },
+    [NICKNAME] ( state, nickName ) {
+        state.nickName = nickName;
     },
 };
 

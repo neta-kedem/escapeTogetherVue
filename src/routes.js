@@ -2,9 +2,7 @@ import VueRouter from 'vue-router';
 
 import Signin from './components/signin';
 import Signup from './components/signup';
-import Shop from './components/shop';
 import EscapeTogether from './components/escapeTogether';
-import Admin from './components/admin/admin';
 
 const routes = [
   {
@@ -21,16 +19,6 @@ const routes = [
     path     : '/signup',
     name     : 'signup',
     component: Signup
-  },
-  {
-    path     : '/shop',
-    name     : 'shop',
-    component: Shop
-  },
-  {
-    path     : '/admin',
-    name     : 'admin',
-    component: Admin
   },
   { path: '*', redirect: { name: 'home' } }];
 

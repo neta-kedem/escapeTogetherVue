@@ -1,10 +1,7 @@
+import {mapGetters, mapMutations} from 'vuex';
 import authService from '../../services/auth.service';
 import {SIGN_IN, SIGN_OUT} from '../../modules/auth/auth.module';
-import io from 'socket.io-client';
-// import socket from '../../main.js';
-
-
-
+import {MY_GENDER, PREF_GENDER, NICKNAME} from '../../modules/escapeTogether/escapeTogether.module';
 
 export default  {
 	data: () => {
@@ -12,12 +9,22 @@ export default  {
 			questionNum:0,
 			initialScreenHeight: screen.height,
 			swipeIn:'swipeIn',
-			myGender: '',
-			prefGender: '',
-			nickName:''
+			// myGender: '',
+			// prefGender: '',
+			localnickName:''
+		}
+	},
+	watch:{
+		localnickName(){
+			this.setNickName(this.localnickName);
 		}
 	},
 	methods: {
+		...mapMutations({
+            setMyGender		: MY_GENDER,
+            setPrefGender	: PREF_GENDER,
+            setNickName		: NICKNAME,
+        }),
 		changeQuestion(step){
 			let tmpQuestionNum = this.questionNum + step;
 			if(tmpQuestionNum < 0 ) return;
@@ -32,34 +39,23 @@ export default  {
 			if(event.additionalEvent === 'panleft') this.changeQuestion(1);
 			if(event.additionalEvent === 'panright') this.changeQuestion(-1);
 		},
-		chooseGender(subject, gender, el){
-			this[subject] = gender;
+		chooseGender(subject, gender){
+			if(subject==='myGender') this.setMyGender(gender);
+			if(subject==='prefGender') this.setPrefGender(gender);
 		},
 		lockMe(){
-			window.socket = io(window.location.hostname+':3050'+'/game',{query:{userId:localStorage.getItem('escapeTogetherUserId'),
-																				myGender:this.myGender,
-																				prefGender:this.prefGender,
-																				userName:this.nickName}});
 			this.$router.push('/game');
 		},
-
-		// signin( user ) {
-		//   this.$validator.validateAll();
-		//   if( this.errors.any() ) return;
-
-		//   authService.signin(user).then(res => {
-		//     this.$store.commit(SIGN_IN, res);
-		//     this.$router.go(-1);
-		//   }).catch(err => {
-		//     err.json().then(res => this.error = res.error);
-		//   })
-
-		// }
 	},
 	mounted(){
 		
 	},
 	computed:{
+		...mapGetters([
+          'myGender',
+          'prefGender',
+          'nickName',
+        ]),
 		amIMale(){
 			return (this.myGender === 'man');
 		},

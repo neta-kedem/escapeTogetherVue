@@ -14,6 +14,7 @@ var GameState = (function () {
         this.modals = scenesData.modals;
         this.cb = cb;
         if (playerGender) {
+            console.log('playerGender????',playerGender);
             this.addPlayer(playerName, playerGender, playerCurrScene);
         }
     }
@@ -36,6 +37,7 @@ var GameState = (function () {
         if(artifactId.devtoolsEnabled || artifactId.source) return;
         var that = this;
         console.log('game state totally knows' , artifactId , 'was clicked');
+        // console.log('this.players:',this.players);
         var userScene = this.players[userId].currScene;
         var clickedArtifact;
         for (var scene in this.scenes) {
@@ -45,7 +47,7 @@ var GameState = (function () {
                 break;
             }
         }
-        console.log('***clicked***', clickedArtifact);
+        console.log('***clicked***', clickedArtifact.id);
         //if the clicked artifact is shown (prevent bugs due to "clicking" an already hidden object due to communication lag)
         if (clickedArtifact.shown) {
             if ((!clickedArtifact.required.length && !this.players[userId].itemIdInHand) || clickedArtifact.required.indexOf(this.players[userId].itemIdInHand) >= 0) {
@@ -63,12 +65,6 @@ var GameState = (function () {
                         case 'loadScene':
                             that.players[userId].currScene = action.loadScene;
                             break;
-                        /*                        //remind me why we have both loadModal and loadScene?
-                                                case 'loadModal':
-                                                    console.log('loading modal', action.loadModal);
-                                                    this.players[userId].currScene = action.loadModal;
-                                                    break;
-                        */
                         case 'changeSceneEveryone':
                             Object.keys(action.changeSceneEveryone).forEach(function (sceneToChange) {
                                 that.players.forEach(function (player) {
@@ -103,9 +99,10 @@ var GameState = (function () {
         this.sendStateToUsers();
     };
     //a happy new player joind the room
-    GameState.prototype.addPlayer = function (name, gender, currScene) {
+    GameState.prototype.addPlayer = function (name, gender, prefGender, currScene, givenId) {
         if (currScene === void 0) { currScene = 'classroom'; }
-        this.players.push({ name: name, gender: gender, currScene: currScene, itemIdInHand: null });
+        this.players.push({ name: name, gender: gender, prefGender:prefGender, currScene: currScene, itemIdInHand: null });
+        // console.log('this.players in addPlayer',this.players);
         this.bags.push([]);
         return { bags: this.bags, players: this.players, scenes: this.scenes, modals: this.modals, userId: this.players.length - 1 };
     };

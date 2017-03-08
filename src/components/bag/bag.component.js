@@ -8,7 +8,7 @@ export default {
     },
     methods: {
     	bagClicked(artifactId){
-        	this.socket.emit('bagedArtifactClicked', artifactId);
+        	window.socket.emit('bagedArtifactClicked', artifactId);
         }
     },
     computed: {

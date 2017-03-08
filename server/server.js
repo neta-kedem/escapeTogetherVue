@@ -98,56 +98,83 @@ let clientsideJSON = eval('(' + objStr + ')');
 
 let initialGameState = getGameStateFromJSON(clientsideJSON);
 let inactiveUsers=[];
-var gameState = new GameState(initialGameState, emitState);
+// var gameState = new GameState(initialGameState, emitState);
 
 gameIo.count = 0;
 gameIo.roomsGroup = new RoomsManager();
 
 gameIo.on('connection', function (socket) {
+	console.log('socket.id 1',socket.id);
 	var wantedUserId = +socket.handshake.query.userId;
+	var wantedUserRoom = +socket.handshake.query.roomId;
 	console.log('a user connected');
 	let stateWithUserId;
-	if (inactiveUsers[wantedUserId]){
+	console.log('inactiveUsers[]:',inactiveUsers);
+	console.log('wantedUserRoom:',wantedUserRoom, 'wantedUserId', wantedUserId);
+	console.log('inactiveUsers[wantedUserRoom]:',inactiveUsers[wantedUserRoom]);
+	if(inactiveUsers[wantedUserRoom] && inactiveUsers[wantedUserRoom][wantedUserId] != undefined) {
+	// if (inactiveUsers[wantedUserId] == wantedUserRoom ){
 		console.log("it's a known inactive user!");
-		inactiveUsers[wantedUserId] = false;
-		stateWithUserId = gameState.reconnectPlayer(wantedUserId);
-	}else{
+		let room = gameIo.roomsGroup.getRoomById(wantedUserRoom);
+		inactiveUsers[wantedUserRoom][wantedUserId] = false;
+		socket.roomId = room.id;
+		socket.room = room;
+		socket.join(room.id);
+		stateWithUserId = socket.room.roomState.reconnectPlayer(wantedUserId);
+	} else {
 		if (!socket.roomId) {
 			// console.log('socket.handshake.query:',socket.handshake.query);
 			let userName = socket.handshake.query.userName;
 			let myGender = socket.handshake.query.myGender;
 			let prefGender = socket.handshake.query.prefGender;
 			gameIo.count++;
-			console.log('escaping together' + gameIo.count);
-			let room = gameIo.roomsGroup.setupAvailableRoom(userName, myGender, prefGender);
+			console.log('escaping together', gameIo.count);
+			let room = gameIo.roomsGroup.setupAvailableRoom(userName, myGender, prefGender, socket);
 			socket.roomId = room.id;
+			socket.room = room;
 			socket.join(room.id);
+			// console.log('socket.room:',socket.room);
 		}
-		stateWithUserId = gameState.addPlayer('gramsci', 'queer', 'classroom');
+		// stateWithUserId = gameState.addPlayer(socket.handshake.query.userName, socket.handshake.query.myGender, socket.handshake.query.prefGender, 'classroom');
+		stateWithUserId = socket.room.roomState.addPlayer(socket.handshake.query.userName, socket.handshake.query.myGender, socket.handshake.query.prefGender, 'classroom');
+		// console.log('socket.room.roomState:',socket.room.roomState);
 	}
 	const userId = stateWithUserId.userId;
+	const roomId = socket.roomId;
+	stateWithUserId.roomId = socket.roomId;
 	socket.emit('state update', stateWithUserId);
-	console.log('state update');
-	socket.broadcast.emit('state update', {
+	// gameIo.emit('state update', stateWithUserId);
+	// gameIo.to(0).emit('state update', stateWithUserId);
+	console.log('state update1', stateWithUserId.userId);
+	// socket.broadcast.to(socket.roomId).emit('state update', {
+	// 	bags : stateWithUserId.bags,
+	// 	players : stateWithUserId.players,
+	// 	scenes : stateWithUserId.scenes
+	// });
+	gameIo.to(socket.roomId).emit('state update', {
 		bags : stateWithUserId.bags,
 		players : stateWithUserId.players,
 		scenes : stateWithUserId.scenes
 	});
+
 	socket.on('disconnect', function () {
-		console.log('user',userId,'disconnected');
-		inactiveUsers[userId] = true;
+		console.log('user',userId,'disconnected from room', roomId);
+		if(!inactiveUsers[roomId]) inactiveUsers[roomId]=[];
+		inactiveUsers[roomId][userId] = roomId;
 	});
 	socket.on('chat message', function (msg) {
 		console.log('chat message');
 		gameIo.emit('chat message', msg);
 	});
 	socket.on('userClick', function (msg) {
+		console.log('socket.id 2',socket.id);
 		console.log('userClick:', (msg));
-		gameState.userClick(userId, msg);
+		socket.room.roomState.userClick(userId, msg);
+		console.log('socket.roomId:',socket.roomId);
 	});
 	socket.on('bagedArtifactClicked', function (msg) {
 		console.log('bagedArtifactClicked:', msg);
-		gameState.bagedArtifactClicked(userId, msg);
+		socket.room.roomState.bagedArtifactClicked(userId, msg);
 	});
 });
 

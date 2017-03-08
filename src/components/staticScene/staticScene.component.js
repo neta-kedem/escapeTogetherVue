@@ -5,12 +5,6 @@ import {UPDATE_QUANTITY} from '../../modules/escapeTogether/escapeTogether.modul
 
 export default {
     name: 'staticScene',
-    // props   : {
-    //   product: {
-    //     type    : Object,
-    //     required: true
-    //   }
-    // },
     data() {
         return {
         }
@@ -43,8 +37,4 @@ export default {
             modalHotSpots:  'modalHotSpots',
         }),
     },
-    mounted(){
-    },
-    watch:{
-    }
 }
