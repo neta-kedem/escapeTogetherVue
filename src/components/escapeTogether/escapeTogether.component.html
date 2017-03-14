@@ -1,6 +1,7 @@
-<div id="father" style="width:100%;height:100%;">
+<div id="father" style="width:100%;height:100%;" @mousedown="mouseDown()" @mousemove="mouseMove()" @mouseup="makeRipple($event)">
       <fixedPhoto v-if="showModal"></fixedPhoto>
       <bag-component></bag-component>
-      <!-- <games-component v-if="playGame"></games-component> -->
+      <games-component v-if="playGame"></games-component>
       <div id="panorama" style="width:100%;"></div>
+      <div ref="rippleDiv" class="ripple rippleDiv" :class="{active:rippleDivActive}" :style="rippleDivStyle"></div>
 </div>

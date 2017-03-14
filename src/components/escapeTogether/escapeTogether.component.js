@@ -1,7 +1,5 @@
 import {mapGetters, mapMutations} from 'vuex';
-import authService from '../../services/auth.service';
-import {MODAL_SRC, OPEN_MODAL, CLOSE_MODAL, SET_HOT_SPOTS, SET_BAGS, SET_USER_ID} from '../../modules/escapeTogether/escapeTogether.module';
-import socket from '../../main.js';
+import {MODAL_SRC, OPEN_MODAL, CLOSE_MODAL, SET_HOT_SPOTS, SET_BAGS, SET_USER_ID, OPEN_GAME, CLOSE_GAME, GAME_CODE, GAME_HTML, GAME_CSS} from '../../modules/escapeTogether/escapeTogether.module';
 
 import Vue from 'vue';
 const JSON_URL = 'gameData';
@@ -16,26 +14,28 @@ export default {
     data:() =>{
         return {
             view:null,
-            isPannellumOnLoadActive: false,
-            currentScene:'classroom',
+            isPannellumOnLoadActive : false,
+            currentScene            :'classroom',
+            rippleDivStyle          : {top:'0px', left:'0px;'},
+            rippleDivActive         : false,
+            clearRippleTimeOut      : [],
+            clickTypeFlag           : 0
         }
     },
     methods: {
         ...mapMutations({
-            modalSrc:       MODAL_SRC,
-            openModal:      OPEN_MODAL,
-            closeModal:     CLOSE_MODAL,
-            setHotSpots:    SET_HOT_SPOTS,
-            setBags:        SET_BAGS,
-            setUserId:      SET_USER_ID,
+            modalSrc    : MODAL_SRC,
+            openModal   : OPEN_MODAL,
+            closeModal  : CLOSE_MODAL,
+            setHotSpots : SET_HOT_SPOTS,
+            setBags     : SET_BAGS,
+            setUserId   : SET_USER_ID,
+            openGame    : OPEN_GAME,
+            closeGame   : CLOSE_GAME,
+            gameCode    : GAME_CODE,
+            gameHtml    : GAME_HTML,
+            gameCSS     : GAME_CSS,
         }),
-        // checkout() {
-          // if( !authService.isLoggedIn() ) {
-            // this.$router.push({ name: 'signin' });
-            // return;
-          // }
-          // this.$store.dispatch('checkout');
-        // }
         loadPannellum(elId){
             return Vue.http.get(JSON_URL).then((res) => {
                 this.view = pannellum.viewer(elId, eval('(' + res.body + ')'));
@@ -45,7 +45,6 @@ export default {
             if (!this.isPannellumOnLoadActive){
                 this.isPannellumOnLoadActive = true;
                 this.view.on('load', ()=>{
-                    console.log('this:',this);
                     console.warn('load event fired to ',this.currentScene);
                     this._scenes[this.currentScene].forEach((artifact)=>{
                         let hsHtml=(document.querySelector('#'+artifact.id));
@@ -71,7 +70,7 @@ export default {
                 if (msg.userId === this.userId){
                     let b = document.querySelector('.pnlm-title-box');
                     if (!(b.childElementCount && b.children[b.childElementCount-1].textContent === msg.message)){
-                        let now=Date.now();
+                        let now = Date.now();
                         b.innerHTML += '<div id="msg'+now +'">' + msg.message + '</div>';
                         setTimeout(()=> {document.querySelector('#msg'+now).remove()},2000);
                     }
@@ -87,6 +86,7 @@ export default {
                 if(msg.hasOwnProperty('userId')){
                     this.setUserId(msg.userId);
                     this.modals = msg.modals;
+                    this.games = msg.games;
                     localStorage.setItem('escapeTogetherUserId', msg.userId);
                     localStorage.setItem('escapeTogetherRoomId', msg.roomId);
                 }
@@ -101,16 +101,34 @@ export default {
                     //we have a modal scene
                     if(this.modals && this.modals.hasOwnProperty(scene)){
                         console.log('currentScene in if',this.currentScene);
-
                         this.modalSrc(this.modals[scene].modalSrc);
                         // this.modalSrc = this.modals[scene].modalSrc;
                         this.setHotSpots(msg.scenes[scene]);
+                        this.closeGame();
                         this.openModal();
+                    } else if(this.games && this.games[scene] && this.games[scene].gameSrc){
+                        console.log('setting hot spots:',msg.scenes[scene]);
+                        this.setHotSpots(msg.scenes[scene]);
+                        this.$http.get(this.games[scene].gameSrc + '.js').then((jsRes)=>{
+                            var reader = new FileReader();
+                            reader.readAsText(jsRes.bodyBlob);
+                            reader.onload = () => {
+                                this.gameCode(reader.result);
+                                this.$http.get(this.games[scene].gameSrc + '.html').then((htmlRes)=>{
+                                    this.$http.get(this.games[scene].gameSrc + '.css').then((cssRes)=>{
+                                        this.gameCSS(cssRes.body);
+                                        this.gameHtml(htmlRes.body);
+                                        this.closeModal();
+                                        this.openGame();
+                                    })
+                                });
+                            };
+                        });
                     }
-                    //in case of a normal scene
+                    //in case of a panoramic scene
                     else{
                         this.closeModal();
-
+                        this.closeGame();
                         console.log('currentScene in else',this.currentScene);
                         //this.view = this.view.loadScene(scene, 0, 0, 100);
                         // 'same' means scene default pitch/yaw/hfow from config.json
@@ -120,7 +138,6 @@ export default {
                         //else {console.log(scene, this.view.getPitch(), this.view.getYaw(), this.view.getHfov());
                         //  this.view = this.view.loadScene(scene, this.view.getPitch(), this.view.getYaw(), this.view.getHfov());
                         //}
-
                         this.activatePannellumOnLoad();
                     }
                 }
@@ -130,8 +147,34 @@ export default {
                     else console.warn('#' + artifact.id+ ' not found in DOM');
                 });
             });
-        }
+        },
+        makeRipple(event){
+            if(!this.clickTypeFlag){
+                this.rippleDivActive = false;
+                this.clearRippleTimeOut.forEach((idToDelete)=>{
+                    clearTimeout(idToDelete);
+                });
+                this.clearRippleTimeOut.splice(0, this.clearRippleTimeOut.length);;
+                this.rippleDivStyle.top     = event.clientY - 25 + 'px';
+                this.rippleDivStyle.left    = event.clientX - 25 + 'px';
+                setTimeout(()=>this.rippleDivActive = true),0;
 
+                this.clearRippleTimeOut.push(setTimeout(()=>{
+                    console.log('this.clearRippleTimeOut:',this.clearRippleTimeOut);
+                    // this.clearRippleTimeOut.forEach((idToDelete)=>{
+                        // clearTimeout(idToDelete);
+                    // });
+                    // this.clearRippleTimeOut.splice(0, this.clearRippleTimeOut.length - 1);;
+                    this.rippleDivActive = false;
+                }, 1000));
+            }
+        },
+        mouseDown(){
+            this.clickTypeFlag = 0;
+        },
+        mouseMove(){
+            this.clickTypeFlag = 1;
+        },
     },
     computed: {
         ...mapGetters([
@@ -140,17 +183,15 @@ export default {
           'myGender',
           'prefGender',
           'nickName',
+          'playGame',
         ]),
     },
     mounted() {
-        console.log('this 1',this);
         let prmLoaded = this.loadPannellum('panorama');
         prmLoaded.then(()=>{
-            
             this.start();
         });
         window.addEventListener('message' , (msg)=>{
-            // console.log('on message', msg.data);
             this.artifactClicked(msg.data);
         });
     },

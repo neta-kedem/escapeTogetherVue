@@ -36,8 +36,6 @@ class Room {
             this.socket.emit('message', msg);
             this.socket.broadcast.to(this.id).emit('message', msg);
         } else {
-            // this.socket.to(this.socket.roomId).emit('state update', msg);
-            // this.socket.broadcast.to(this.socket.roomId).emit('state update', msg);
             this.socket.emit('state update', msg);
             this.socket.broadcast.to(this.id).emit('state update', msg);
         }
@@ -48,18 +46,22 @@ function getGameStateFromJSON(sourceJSON) {
     var sourceJSON = sourceJSON;
     var hotspots = {};
     var modals = {};
+    var games = {};
     for (let scene in sourceJSON.scenes) {
-        if (sourceJSON.scenes[scene].type  === 'staticScene'){
+        if (sourceJSON.scenes[scene].type  === 'staticScene') {
             modals[scene] = objectWithoutProperties(sourceJSON.scenes[scene],['type','hotSpots']);
         }
-        hotspots[scene] = sourceJSON.scenes[scene].hotSpots.reduce((result,hs)=>{
+        if (sourceJSON.scenes[scene].type  === 'gameScene') {
+            games[scene] = objectWithoutProperties(sourceJSON.scenes[scene],['type','hotSpots']);
+        }
+        hotspots[scene] = sourceJSON.scenes[scene].hotSpots.reduce((result,hs) => {
             if (hs.hasOwnProperty('id')){
                 result.push(objectWithoutProperties(hs,['pitch','yaw']));
             }
             return result;
-        },[]);
+        }, []);
     }
-    return {hotSpots:hotspots, modals:modals};
+    return {hotSpots:hotspots, modals:modals, games:games};
 }
 
 function objectWithoutProperties(obj, keys) {

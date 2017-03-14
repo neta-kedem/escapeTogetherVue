@@ -53,7 +53,7 @@ http.listen(port, function () {
 const io = require('socket.io')(http);
 const gameIo = io.of('/game');
 
-function emitState(msg) {
+/*function emitState(msg) {
 	if(msg.hasOwnProperty('message')){
 		gameIo.emit('message', msg);
 	} else {
@@ -90,13 +90,13 @@ function getGameStateFromJSON(sourceJSON) {
 		},[]);
 	}
 	return {hotSpots:hotspots, modals:modals};
-}
+}*/
 
 //use eval to allow comments inside JSON file.
 //eval fails on JSON files starting with "{", using () is a workaround for that
 let clientsideJSON = eval('(' + objStr + ')');
 
-let initialGameState = getGameStateFromJSON(clientsideJSON);
+// let initialGameState = getGameStateFromJSON(clientsideJSON);
 let inactiveUsers=[];
 // var gameState = new GameState(initialGameState, emitState);
 
@@ -181,4 +181,3 @@ gameIo.on('connection', function (socket) {
 http.listen(port, function () {
 	console.log('WebSocket is Ready');
 });
-

@@ -137,6 +137,22 @@
 					"pitch" : 5,
 					"yaw" : 169,
 					"type" : "info"
+				}, {
+					"pitch" : 10.24,
+					"yaw" : -11.33,
+					"id" : "classroom_board",
+					"type" : "info",
+					"imgSrc" : "img/artifacts/semi-trans.png",
+					"shown" : true,
+					"beingUsedBy" : -1,
+					"required" : [],
+					"actions" : [
+						{"loadScene" : "firstGame"}
+					]
+				}, {
+					"pitch" : -7.458,
+					"yaw" : 11.507,
+					"type" : "info"
 				}
 			]
 		},
@@ -267,8 +283,25 @@
 				"actions" : [
 					{"loadScene" : "classroom"}
 				]
-			}
-			]
+			}]
+		},
+		"firstGame" : {
+			"type" : "gameScene",
+			"gameSrc": "/games/game1",
+			"hotSpots" : [{
+				"top": "100px",
+				"left": "0%",
+				"width": "33px",
+				"height": "33px",
+				"id": "doorInGarbage",
+				"type": "info",
+				"imgSrc": "img/artifacts/arrow-back-128.png",
+				"shown": true,
+				"required": [],
+				"actions": [
+					{"loadScene": "classroom"}
+				]
+			}]
 		}
 	}
 }

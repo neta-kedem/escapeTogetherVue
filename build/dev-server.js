@@ -77,6 +77,9 @@ app.get('/img/panoramas/:room/:folder/:id', (req, res)=>{
 app.get('/img/scenes/:id', (req, res)=>{
  res.sendFile(__dirname + '/img/scenes/'+req.params.id);
 });
+app.get('/games/:id', (req, res)=>{
+ res.sendFile(__dirname + '/games/'+req.params.id);
+});
 app.get('/favicon.ico', (req, res)=>{
  res.sendFile(__dirname + '/img/icon04.png');
 });

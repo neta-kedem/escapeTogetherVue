@@ -12,6 +12,7 @@ var GameState = (function () {
         this.flatten = function (list) { return list.reduce(function (acc, curr) { return acc.concat(Array.isArray(curr) ? that.flatten(curr) : curr); }, []); };
         this.scenes = scenesData.hotSpots;
         this.modals = scenesData.modals;
+        this.games = scenesData.games;
         this.cb = cb;
         if (playerGender) {
             console.log('playerGender????',playerGender);
@@ -104,7 +105,7 @@ var GameState = (function () {
         this.players.push({ name: name, gender: gender, prefGender:prefGender, currScene: currScene, itemIdInHand: null });
         // console.log('this.players in addPlayer',this.players);
         this.bags.push([]);
-        return { bags: this.bags, players: this.players, scenes: this.scenes, modals: this.modals, userId: this.players.length - 1 };
+        return { bags: this.bags, players: this.players, scenes: this.scenes, modals: this.modals, games: this.games, userId: this.players.length - 1 };
     };
     //a happy old player reconnected the game
     GameState.prototype.reconnectPlayer = function (userId) {
