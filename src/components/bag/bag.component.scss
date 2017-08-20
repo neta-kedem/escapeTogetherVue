@@ -11,10 +11,17 @@
     color: #fff;
     text-align: left;
     z-index: 5;
+    padding: 5px;
     /*display: none;*/
     /* Fix Safari fullscreen bug */
     /*-webkit-transform: translateZ(9999px);*/
     /*transform: translateZ(9999px);*/
+}
+.itemInBag{
+    height: 64px;
+    max-width: 90px;
+    margin: auto;
+    display: flex;
 }
 .inUseByMe{
     /*opacity: 0.5;*/
@@ -23,4 +30,26 @@
 .inUseByOther{
     opacity: 0.5;
     /*background-color: gold;*/
+}
+.userAvatar{
+    font-weight: bold;
+    display: flex;
+    margin-bottom: 10px;
+    /*line-height: 25px;*/
+}
+
+.userAvatar > img {
+    width: 40px;
+    height: 40px;
+    padding-right: 2px
+
+}
+.name{
+    width: 50px;
+    margin: auto;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

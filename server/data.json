@@ -147,7 +147,7 @@
 					"beingUsedBy" : -1,
 					"required" : [],
 					"actions" : [
-						{"loadScene" : "firstGame"}
+						{"loadScene" : "pacman"}
 					]
 				}, {
 					"pitch" : -7.458,
@@ -302,6 +302,36 @@
 					{"loadScene": "classroom"}
 				]
 			}]
-		}
+		},
+		"pacman" : {
+			"type" : "gameScene",
+			"gameSrc": "/games/pacman",
+			"hotSpots" : [{
+				"top": "100px",
+				"left": "0%",
+				"width": "33px",
+				"height": "33px",
+				"id": "doorInGarbage",
+				"type": "info",
+				"imgSrc": "img/artifacts/arrow-back-128.png",
+				"shown": true,
+				"required": [],
+				"actions": [
+					{"loadScene": "classroom"}
+				]
+			}]
+		},
+		"newClassroom": {
+			"type": "multires",
+			"multiRes": {
+				"path": "/img/panoramas/newClassroom/%l/%s%y_%x",
+				"fallbackPath": "/img/panoramas/newClassroom/fallback/%s",
+				"extension": "jpg",
+				"tileResolution": 512,
+				"maxLevel": 4,
+				"cubeResolution": 2280
+			},
+			"hotSpots" : []
+		},
 	}
 }

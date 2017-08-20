@@ -18,6 +18,8 @@ export const MY_GENDER      = 'store/MY_GENDER';
 export const PREF_GENDER    = 'store/PREF_GENDER';
 export const NICKNAME       = 'store/NICKNAME';
 
+export const UPDATE_MSG       = 'store/UPDATE_MSG';
+
 const state = {
     showModal     : false,
     playGame      : false,
@@ -32,6 +34,7 @@ const state = {
     gameCode      : '',
     gameHtml      : '',
     gameCSS       : '',
+    completeMsg   : '',
 };
 
 const getters = {
@@ -48,6 +51,7 @@ const getters = {
     gameCode    : state => state.gameCode,
     gameHtml    : state => state.gameHtml,
     gameCSS     : state => state.gameCSS,
+    completeMsg : state => state.completeMsg,
 };
 
 const mutations = {
@@ -92,6 +96,9 @@ const mutations = {
     },
     [NICKNAME] ( state, nickName ) {
         state.nickName = nickName;
+    },
+    [UPDATE_MSG] ( state, newMsg ) {
+        state.completeMsg = newMsg;
     },
 };
 

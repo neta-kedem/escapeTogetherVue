@@ -68,15 +68,18 @@ app.get('/pannellum/libpannellum.js', (req, res)=>{
 app.get('/pannellum/img/:id', (req, res)=>{
  res.sendFile(__dirname + '/pannellum/img/'+req.params.id);
 });
-app.get('/img/artifacts/:id', (req, res)=>{
- res.sendFile(__dirname + '/img/artifacts/'+req.params.id);
+app.get('/img/:a', (req, res)=>{
+ res.sendFile(__dirname +'/img/'+ req.params.a);
 });
-app.get('/img/panoramas/:room/:folder/:id', (req, res)=>{
- res.sendFile(__dirname + '/img/panoramas/'+req.params.room+'/'+req.params.folder+'/'+req.params.id);
+app.get('/img/:a/:b', (req, res)=>{
+ res.sendFile(__dirname + '/img/'+req.params.a+'/'+req.params.b);
 });
-app.get('/img/scenes/:id', (req, res)=>{
- res.sendFile(__dirname + '/img/scenes/'+req.params.id);
+app.get('/img/:a/:b/:c/:d', (req, res)=>{
+ res.sendFile(__dirname + '/img/'+req.params.a+'/'+req.params.b+'/'+req.params.c+'/'+req.params.d);
 });
+// app.get('/img/scenes/:id', (req, res)=>{
+//  res.sendFile(__dirname + '/img/scenes/'+req.params.id);
+// });
 app.get('/games/:id', (req, res)=>{
  res.sendFile(__dirname + '/games/'+req.params.id);
 });
@@ -87,9 +90,6 @@ app.get('/manifest.json', (req, res)=>{
  res.sendFile(__dirname + '/manifest.json');
 });
 
-app.get('/img/:id', (req, res)=>{
- res.sendFile(__dirname +'/img/'+ req.params.id);
-});
 
 
 module.exports = app.listen(port, function (err) {

@@ -1,5 +1,5 @@
 import {mapGetters, mapMutations} from 'vuex';
-import {MODAL_SRC, OPEN_MODAL, CLOSE_MODAL, SET_HOT_SPOTS, SET_BAGS, SET_USER_ID, OPEN_GAME, CLOSE_GAME, GAME_CODE, GAME_HTML, GAME_CSS} from '../../modules/escapeTogether/escapeTogether.module';
+import {MODAL_SRC, OPEN_MODAL, CLOSE_MODAL, SET_HOT_SPOTS, SET_BAGS, SET_USER_ID, OPEN_GAME, CLOSE_GAME, GAME_CODE, GAME_HTML, GAME_CSS, UPDATE_MSG} from '../../modules/escapeTogether/escapeTogether.module';
 
 import Vue from 'vue';
 const JSON_URL = 'gameData';
@@ -35,6 +35,7 @@ export default {
             gameCode    : GAME_CODE,
             gameHtml    : GAME_HTML,
             gameCSS     : GAME_CSS,
+            updateMsg     : UPDATE_MSG,
         }),
         loadPannellum(elId){
             return Vue.http.get(JSON_URL).then((res) => {
@@ -83,6 +84,7 @@ export default {
             // });
             window.socket.on('state update', (msg)=> {
                 console.log('msg update:',msg);
+                this.updateMsg(msg);
                 if(msg.hasOwnProperty('userId')){
                     this.setUserId(msg.userId);
                     this.modals = msg.modals;

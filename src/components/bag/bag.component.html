@@ -1,7 +1,9 @@
 <div class="bag">
-  <div v-for="bag in bags">
+  <div v-for="(bag, userId) in bags">
+  	<div class="userAvatar">
+  	<img :src="avatarImgUrl(userId)" alt="userAvatar"><div class="name">{{completeMsg.players[userId].name}}</div></div>
     <!-- <img @click="escapeTogetherService.bagClicked(artifact.id)" v-for="artifact in bag" :src="{{artifact.src}}" height="64" width="64" [class.inUseByMe]="artifact.beingUsedBy===escapeTogetherService.userId()" [class.inUseByOther]="escapeTogetherService.usedByOthers(artifact, escapeTogetherService.userId())"/> -->
-    <img v-for="artifact in bag" @click="bagClicked(artifact.id)" :src="artifact.src" height="64" width="64" :class="{inUseByMe:artifact.beingUsedBy===userId, inUseByOther:((artifact.beingUsedBy !== -1) && (artifact.beingUsedBy !== userId))}"/>
+    <img v-for="artifact in bag" @click="bagClicked(artifact.id)" :src="artifact.src" class="itemInBag" :class="{inUseByMe:artifact.beingUsedBy===userId, inUseByOther:((artifact.beingUsedBy !== -1) && (artifact.beingUsedBy !== userId))}"/>
     <hr>
   </div>
 </div>

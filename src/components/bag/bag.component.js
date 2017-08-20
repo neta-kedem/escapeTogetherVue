@@ -9,6 +9,9 @@ export default {
     methods: {
     	bagClicked(artifactId){
         	window.socket.emit('bagedArtifactClicked', artifactId);
+        },
+        avatarImgUrl(userId){
+            return (this.completeMsg.players[userId].gender === 'man')? 'img/avatars/person-flat.png' : 'img/avatars/girl-512.png';
         }
     },
     computed: {
@@ -16,8 +19,10 @@ export default {
             'bags',
             'userId',
             'socket',
+            'myGender',
+            'prefGender',
+            'completeMsg'
         ]),
-        
         // usedByOthers(artifact, userId){
 		// 	return ((artifact.beingUsedBy !== -1) && (artifact.beingUsedBy !== userId) );
 		// }

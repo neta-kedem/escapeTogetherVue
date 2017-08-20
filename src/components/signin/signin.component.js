@@ -85,6 +85,9 @@ export default  {
 				case 2:{
 					return !this.nickName;
 				}
+				case 3:{
+					return true;
+				}
 			}
 		},
 		visibilityEnableNextQues(){
